@@ -1,63 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>정보보호 점검</title>
-</head>
-<body>
-<h2>정보보호의 날 점검</h2>
+<h2>정보보호의 날 점검 현황</h2>
 
-<form method="post" enctype="multipart/form-data">
-점검일:
-<input type="date" name="inspect_date" required><br><br>
+<p>전체 {{total}}대 / 점검완료 {{done}}대</p>
 
-점검자:
-<input name="inspector" required><br><br>
-
-성명:
-<select name="name" id="name" required>
-<option value="">선택</option>
-{% for u in users %}
-<option value="{{u[0]}}">{{u[0]}}</option>
-{% endfor %}
-</select><br><br>
-
-부서: <input name="department" id="department" readonly><br>
-자산번호: <input name="asset_no" id="asset_no" readonly><br>
-스티커번호: <input name="sticker_no" id="sticker_no"><br><br>
-
-<hr>
-
-{% for i in range(1,6) %}
-항목 {{i}}:
-<select name="item{{i}}">
-  <option value="1">정상</option>
-  <option value="0">미흡</option>
-</select><br>
-{% endfor %}
-
-<br>
-사진 첨부:
-<input type="file" name="photo"><br><br>
-
-코멘트:
-<textarea name="comment"></textarea><br><br>
-
-<button type="submit" name="status" value="temp">임시저장</button>
-<button type="submit" name="status" value="submitted">제출</button>
+<form>
+<input name="q" value="{{q}}" placeholder="성명 / 부서 / 자산번호 검색">
+<button>검색</button>
 </form>
 
-<script>
-document.getElementById("name").addEventListener("change", function(){
-    fetch("/get_user?name=" + this.value)
-    .then(res => res.json())
-    .then(data => {
-        department.value = data.department || "";
-        asset_no.value = data.asset_no || "";
-        sticker_no.value = data.sticker_no || "";
-    });
-});
-</script>
+<table border="1">
+<tr>
+<th>성명</th><th>부서</th><th>자산번호</th><th>점검상태</th>
+</tr>
+{% for u in users %}
+<tr>
+<td>{{u.name}}</td>
+<td>{{u.department}}</td>
+<td><a href="/detail/{{u.asset_no}}">{{u.asset_no}}</a></td>
+<td>{{u.status or '미점검'}}</td>
+</tr>
+{% endfor %}
+</table>
 
-</body>
-</html>
+<br>
+<a href="/export">엑셀 다운로드</a>

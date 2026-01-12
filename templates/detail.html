@@ -1,0 +1,24 @@
+<h3>자산 점검 상세</h3>
+
+<p>{{user.name}} / {{user.department}} / {{user.asset_no}}</p>
+
+<form method="post" enctype="multipart/form-data">
+점검일 <input type="date" name="inspect_date" required><br>
+점검자 <input name="inspector" required><br>
+
+스티커번호 <input name="sticker_no" value="{{inspection.sticker_no if inspection}}"><br>
+
+{% for i in range(1,6) %}
+항목 {{i}}
+<select name="item{{i}}">
+<option value="1">정상</option>
+<option value="0">미흡</option>
+</select><br>
+{% endfor %}
+
+사진 <input type="file" name="photo"><br>
+코멘트 <textarea name="comment">{{inspection.comment if inspection}}</textarea><br>
+
+<button type="submit">저장</button>
+<a href="/">전체 목록으로 돌아가기</a>
+</form>
