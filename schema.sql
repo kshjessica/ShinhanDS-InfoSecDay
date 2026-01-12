@@ -35,3 +35,8 @@ CREATE TABLE IF NOT EXISTS inspections (
 
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO users (name, department, asset_no, sticker_no) VALUES
+('김서현', '사이버대응팀', 'PC-001', 'ST-1001'),
+('안지현', '보안컨설팅팀', 'PC-002', 'ST-1002'),
+('김정한', '보안사업팀', 'PC-003', 'ST-1003');
