@@ -1,25 +1,94 @@
-<h2>정보보호의 날 점검 현황</h2>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정보보호의 날 점검 현황</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --shinhan-blue: #00236e;
+            --shinhan-gold: #0046ff;
+            --shinhan-light-blue: #f0f4ff;
+        }
+        body { background-color: #f8f9fa; font-family: 'Pretendard', sans-serif; }
+        .navbar { background-color: var(--shinhan-blue); color: white; }
+        .card-header { background-color: var(--shinhan-blue); color: white; border-bottom: 4px solid var(--shinhan-gold); }
+        .btn-primary { background-color: var(--shinhan-blue); border-color: var(--shinhan-blue); }
+        .btn-primary:hover { background-color: #0036cc; border-color: #0036cc; }
+        .status-badge { padding: 0.4em 0.8em; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
+        .status-done { background-color: #e6f7ef; color: #10b981; }
+        .status-none { background-color: #fee2e2; color: #ef4444; }
+        .search-box { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        table th { background-color: var(--shinhan-light-blue); }
+    </style>
+</head>
+<body>
+    <nav class="navbar mb-4">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1" style="color: #ffffff;">Shinhan Finance Group | 정보보호의 날</span>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-light text-dark me-2">전체 {{total}}대</span>
+                <span class="badge bg-warning text-dark">점검완료 {{done}}대</span>
+            </div>
+        </div>
+    </nav>
 
-<p>전체 {{total}}대 / 점검완료 {{done}}대</p>
+    <div class="container">
+        <div class="search-box">
+            <form action="/" method="GET" class="row g-3">
+                <div class="col-md-10">
+                    <input type="text" name="q" class="form-control" value="{{q}}" placeholder="성명, 부서 또는 자산번호로 검색하세요">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">검색</button>
+                </div>
+            </form>
+        </div>
 
-<form>
-<input name="q" value="{{q}}" placeholder="성명 / 부서 / 자산번호 검색">
-<button>검색</button>
-</form>
-
-<table border="1">
-<tr>
-<th>성명</th><th>부서</th><th>자산번호</th><th>점검상태</th>
-</tr>
-{% for u in users %}
-<tr>
-<td>{{u.name}}</td>
-<td>{{u.department}}</td>
-<td><a href="/detail/{{u.asset_no}}">{{u.asset_no}}</a></td>
-<td>{{u.status or '미점검'}}</td>
-</tr>
-{% endfor %}
-</table>
-
-<br>
-<a href="/export">엑셀 다운로드</a>
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">자산 점검 현황 목록</h5>
+                <div>
+                    <a href="/dashboard" class="btn btn-sm btn-light me-2">대시보드</a>
+                    <a href="/export" class="btn btn-sm btn-warning">엑셀 다운로드</a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">성명</th>
+                                <th>부서</th>
+                                <th>자산번호</th>
+                                <th class="text-center">점검상태</th>
+                                <th class="pe-4 text-center">작업</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in users %}
+                            <tr>
+                                <td class="ps-4 fw-bold">{{u.name}}</td>
+                                <td>{{u.department}}</td>
+                                <td><code>{{u.asset_no}}</code></td>
+                                <td class="text-center">
+                                    {% if u.status == 'submitted' %}
+                                    <span class="status-badge status-done">완료</span>
+                                    {% else %}
+                                    <span class="status-badge status-none">미점검</span>
+                                    {% endif %}
+                                </td>
+                                <td class="pe-4 text-center">
+                                    <a href="/detail/{{u.asset_no}}" class="btn btn-sm btn-outline-primary">상세/점검</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
